@@ -5309,7 +5309,7 @@ __webpack_require__.r(__webpack_exports__);
     makeForm: function makeForm(uid) {
       var _this = this;
 
-      axios.get('http://127.0.0.1:8000/home/getFullForm', {
+      axios.get('https://alakol-parus.kz/extra-api/public/home/getFullForm', {
         params: {
           uid: uid
         }
@@ -5326,7 +5326,7 @@ __webpack_require__.r(__webpack_exports__);
     getForms: function getForms() {
       var _this2 = this;
 
-      axios.get('http://127.0.0.1:8000/home/getForms', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
+      axios.get('https://alakol-parus.kz/extra-api/public/home/getForms', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
       }).then(function (response) {
         _this2.forms = response.data;
         console.log(response.data);
@@ -5337,7 +5337,7 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit: function onSubmit(e) {
       e.preventDefault();
       this.serializedForm = $('#add-form').serialize();
-      axios.get('http://127.0.0.1:8000/home/saveData', {
+      axios.get('https://alakol-parus.kz/extra-api/public/home/saveData', {
         params: {
           uid: this.formUid,
           name: this.formName,
@@ -5425,7 +5425,7 @@ __webpack_require__.r(__webpack_exports__);
     getFormsData: function getFormsData() {
       var _this = this;
 
-      axios.get('http://127.0.0.1:8000/home/getFormData', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
+      axios.get('https://alakol-parus.kz/extra-api/public/home/getFormData', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
       }).then(function (response) {
         response.data.forEach(function (elem) {
           _this.forms.push({

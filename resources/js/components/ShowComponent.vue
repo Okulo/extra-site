@@ -34,7 +34,7 @@
         },
         methods : {
             getFormsData(){
-                axios.get('http://127.0.0.1:8000/home/getFormData',{
+                axios.get('https://alakol-parus.kz/extra-api/public/home/getFormData',{
                    // _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
                 })
                     .then(response => {

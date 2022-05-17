@@ -40,7 +40,7 @@
         },
         methods : {
             makeForm(uid){
-                axios.get('http://127.0.0.1:8000/home/getFullForm',{
+                axios.get('https://alakol-parus.kz/extra-api/public/home/getFullForm',{
                         params: {
                             uid: uid,
                         },
@@ -57,7 +57,7 @@
                     });
             },
             getForms(){
-                axios.get('http://127.0.0.1:8000/home/getForms',{
+                axios.get('https://alakol-parus.kz/extra-api/public/home/getForms',{
                    // _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
                 })
                     .then(response => {
@@ -73,7 +73,7 @@
                 e.preventDefault()
                 this.serializedForm = $('#add-form').serialize();
 
-                axios.get('http://127.0.0.1:8000/home/saveData',{
+                axios.get('https://alakol-parus.kz/extra-api/public/home/saveData',{
                     params: {
                         uid: this.formUid,
                         name: this.formName,
