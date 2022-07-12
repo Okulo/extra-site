@@ -5292,86 +5292,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       forms: [],
-      formName: '',
-      formUid: '',
-      formFields: [],
+      formId: '',
+      boardFields: [],
       formCreatedAt: '',
       serializedForm: ''
     };
   },
   methods: {
-    makeForm: function makeForm(uid) {
+    show: function show(id) {
       var _this = this;
 
-      axios.get('https://alakol-parus.kz/extra-api/public/home/getFullForm', {
+      axios.get('/home/getBoard', {
         params: {
-          uid: uid
+          id: id
         }
       }).then(function (response) {
-        _this.formName = response.data.name;
-        _this.formUid = response.data.uid;
-        _this.formCreatedAt = response.data.created_at; // this.formFields = response.data.fields;
-
-        _this.formFields = JSON.parse(response.data.fields);
+        _this.formId = response.data.id;
+        _this.boardFields = response.data;
       })["catch"](function (err) {
         console.log(err);
       });
     },
-    getForms: function getForms() {
+    getBoards: function getBoards() {
       var _this2 = this;
 
-      axios.get('https://alakol-parus.kz/extra-api/public/home/getForms', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
+      axios.get('/home/getBoards', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
       }).then(function (response) {
         _this2.forms = response.data;
-        console.log(response.data);
-      })["catch"](function (err) {
-        console.log(err);
-      });
-    },
-    onSubmit: function onSubmit(e) {
-      e.preventDefault();
-      this.serializedForm = $('#add-form').serialize();
-      axios.get('https://alakol-parus.kz/extra-api/public/home/saveData', {
-        params: {
-          uid: this.formUid,
-          name: this.formName,
-          data: this.serializedForm
-        }
-      }).then(function (response) {
-        if (response.data.created_at) {
-          alert('Форма успешно отправлена');
-          location.reload();
-        } // console.log(response);
-
-      })["catch"](function (err) {
-        console.log(err);
-      });
-    },
-    saveForm: function saveForm() {
-      console.log('saved!');
-      this.formUid = Math.floor(Math.random() * Date.now());
-      axios.post('/home/saveForm', {
-        formUid: this.formUid,
-        formName: this.formName,
-        formData: this.formData
-      }).then(function (response) {
-        if (response.data.created_at) {
-          alert('форма успешно сохранена!');
-          location.reload();
-        }
       })["catch"](function (err) {
         console.log(err);
       });
     }
   },
   mounted: function mounted() {
-    this.getForms();
+    this.getBoards();
   }
 });
 
@@ -5408,65 +5366,39 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      forms: [],
-      formName: [],
-      formUid: '',
-      formFields: [],
-      fullData: []
+      photo: '',
+      name: '',
+      price: ''
     };
   },
   methods: {
-    getFormsData: function getFormsData() {
-      var _this = this;
+    onSubmit: function onSubmit(e) {
+      if (!this.name || !this.photo || !this.price) {
+        alert('Введите все данные');
+        return;
+      }
 
-      axios.get('https://alakol-parus.kz/extra-api/public/home/getFormData', {// _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
+      console.log('save');
+      this.formUid = Math.floor(Math.random() * Date.now());
+      axios.post('/home/saveForm', {
+        name: this.name,
+        price: this.price,
+        photo: this.photo
       }).then(function (response) {
-        response.data.forEach(function (elem) {
-          _this.forms.push({
-            form_name: elem.form_name,
-            form_data: JSON.parse(elem.form_data),
-            created_at: elem.created_at,
-            form_id: elem.form_id
-          });
-        });
+        console.log(response);
+
+        if (response.data.created_at) {
+          alert('Даныне успшено добавлены!');
+          location.reload();
+        }
       })["catch"](function (err) {
         console.log(err);
       });
-    },
-    getFormDetail: function getFormDetail(id) {
-      var _this2 = this;
-
-      this.fullData = [];
-      this.forms.forEach(function (elem) {
-        if (elem.form_id == id) {
-          var formFieldArray = elem.form_data.split("&");
-          $.each(formFieldArray, function (i, pair) {
-            var nameValue = pair.split("=");
-            var name = decodeURIComponent(nameValue[0]);
-            var value = decodeURIComponent(nameValue[1]);
-          });
-          formFieldArray.forEach(function (elem) {
-            var nameValue = elem.split("=");
-            var name = decodeURIComponent(nameValue[0]);
-            var value = decodeURIComponent(nameValue[1]);
-
-            _this2.fullData.push({
-              name: name,
-              value: value
-            });
-          });
-        }
-      });
+      e.preventDefault();
     }
-  },
-  mounted: function mounted() {
-    this.getFormsData();
   }
 });
 
@@ -28155,7 +28087,9 @@ var render = function () {
   return _c("div", { staticClass: "row justify-content-center" }, [
     _c("div", { staticClass: "col-md-8" }, [
       _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [_vm._v("Список форм")]),
+        _c("div", { staticClass: "card-header" }, [
+          _vm._v("Список объявлений"),
+        ]),
         _vm._v(" "),
         _c(
           "div",
@@ -28175,15 +28109,13 @@ var render = function () {
                       staticClass: "list-group-item list-group-item-action",
                       on: {
                         click: function ($event) {
-                          return _vm.makeForm(data.uid)
+                          return _vm.show(data.id)
                         },
                       },
                     },
                     [
                       _vm._v(
-                        "\n                        UID# " +
-                          _vm._s(data.uid) +
-                          " - " +
+                        "\n                       " +
                           _vm._s(data.name) +
                           "\n                    "
                       ),
@@ -28193,7 +28125,7 @@ var render = function () {
               )
             }),
             _vm._v(" "),
-            _vm.formUid
+            _vm.formId
               ? _c(
                   "div",
                   {
@@ -28204,38 +28136,17 @@ var render = function () {
                     },
                   },
                   [
-                    _c("h4", [_vm._v(_vm._s(_vm.formName))]),
+                    _c("h4", [_vm._v(_vm._s(_vm.boardFields.name))]),
                     _vm._v(" "),
-                    _c(
-                      "form",
-                      {
-                        staticClass: "add-form",
-                        attrs: { id: "add-form" },
-                        on: { submit: _vm.onSubmit },
-                      },
-                      [
-                        _vm._l(_vm.formFields, function (field) {
-                          return _c("div", { staticClass: "form-control" }, [
-                            _c("input", {
-                              staticClass: "col-md-4",
-                              attrs: {
-                                type: field.type,
-                                name: field.name,
-                                placeholder: field.description,
-                              },
-                            }),
-                          ])
-                        }),
-                        _vm._v(" "),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c("input", {
-                          staticClass: "btn btn-sm btn-outline-success",
-                          attrs: { type: "submit", value: "Отправить" },
-                        }),
-                      ],
-                      2
-                    ),
+                    _c("div", [
+                      _c("img", { attrs: { src: _vm.boardFields.photo } }),
+                    ]),
+                    _vm._v(" "),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v("Цена: " + _vm._s(_vm.boardFields.price)),
+                    ]),
                   ]
                 )
               : _vm._e(),
@@ -28272,73 +28183,105 @@ var render = function () {
   return _c("div", { staticClass: "row justify-content-center" }, [
     _c("div", { staticClass: "col-md-8" }, [
       _c("div", { staticClass: "card" }, [
-        _c("div", { staticClass: "card-header" }, [_vm._v("Данные форм")]),
+        _c("div", { staticClass: "card-header" }, [
+          _vm._v("Создать объявление"),
+        ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "card-body" },
-          [
-            _vm._l(_vm.forms, function (data) {
-              return _c(
-                "div",
-                {
-                  staticClass: "list-group",
-                  attrs: { id: "list-tab", role: "tablist" },
-                },
-                [
-                  _c(
-                    "span",
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "form",
+            { staticClass: "add-form", on: { submit: _vm.onSubmit } },
+            [
+              _c("div", { staticClass: "form-control" }, [
+                _c("input", {
+                  directives: [
                     {
-                      staticClass: "list-group-item list-group-item-action",
-                      on: {
-                        click: function ($event) {
-                          return _vm.getFormDetail(data.form_id)
-                        },
-                      },
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.name,
+                      expression: "name",
                     },
-                    [
-                      _vm._v(
-                        "\n                         " +
-                          _vm._s(data.form_name) +
-                          "\n                    "
-                      ),
-                    ]
-                  ),
-                ]
-              )
-            }),
-            _vm._v(" "),
-            _vm.fullData.length > 0
-              ? _c(
-                  "div",
-                  {
-                    staticStyle: {
-                      "margin-top": "15px",
-                      border: "#e9ecef 1px solid",
-                      padding: "10px",
+                  ],
+                  staticClass: "col-md-4",
+                  attrs: {
+                    type: "text",
+                    name: "name",
+                    placeholder: "Название",
+                  },
+                  domProps: { value: _vm.name },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.name = $event.target.value
                     },
                   },
-                  [
-                    _c("h5", [_vm._v("Полные данные")]),
-                    _vm._v(" "),
-                    _vm._l(_vm.fullData, function (field) {
-                      return _c("div", { staticClass: "form-control" }, [
-                        _vm._v(
-                          "\n                            " +
-                            _vm._s(field.name) +
-                            " - " +
-                            _vm._s(field.value) +
-                            "\n                        "
-                        ),
-                      ])
-                    }),
+                }),
+                _c("br"),
+                _c("br"),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.photo,
+                      expression: "photo",
+                    },
                   ],
-                  2
-                )
-              : _vm._e(),
-          ],
-          2
-        ),
+                  staticClass: "col-md-4",
+                  attrs: {
+                    type: "text",
+                    name: "photo",
+                    placeholder: "Ссылка на фото",
+                  },
+                  domProps: { value: _vm.photo },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.photo = $event.target.value
+                    },
+                  },
+                }),
+                _c("br"),
+                _c("br"),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.price,
+                      expression: "price",
+                    },
+                  ],
+                  staticClass: "col-md-4",
+                  attrs: { type: "number", name: "price", placeholder: "Цена" },
+                  domProps: { value: _vm.price },
+                  on: {
+                    input: function ($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.price = $event.target.value
+                    },
+                  },
+                }),
+                _c("br"),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("input", {
+                  staticClass: "btn btn-sm btn-outline-success",
+                  attrs: { type: "submit", value: "Добавить" },
+                }),
+              ]),
+            ]
+          ),
+        ]),
       ]),
     ]),
   ])

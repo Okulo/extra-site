@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Board;
 use App\Models\Form;
+use App\Models\FormData;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -10,46 +12,29 @@ class HomeController extends Controller
     //
     public function saveForm(Request $request){
 
-        $from = Form::create([
-            'uid' => $request->formUid,
-            'name' => $request->formName,
-            'fields' =>  json_encode($request->formData)
+        $from = Board::create([
+            'name' => $request->name,
+            'photo' => $request->photo,
+            'price' =>  $request->price
         ]);
         return $from;
     }
 
-    public function formData(){
-
-        $curl = curl_init();
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'http://data/api/v1/endpoint',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => '{"jsonrpc":"2.0",
-            "method":"form@ping",
-            "params":{"type": "getData", "data": {
-                "formId": 15,
-                "name":"bla",
-                "formType": "bla"
-                }
-                },
-            "id":1
-            }',
-                        CURLOPT_HTTPHEADER => array(
-                            'Content-Type: text/plain'
-                        ),
-                    ));
-        $response = curl_exec($curl);
-
-        curl_close($curl);
-
+    public function addBoard(){
         // полученные данные передаем в вид
+        return view('show');
+    }
+
+    public function getBoards(){
+        $all = Board::all();
+        return $all;
+    }
+
+    public function getBoard(Request $request){
+        $form = Board::where('id', $request->id)->first();
+        return  $form;
+    }
+    public function show(){
         return view('show');
     }
 

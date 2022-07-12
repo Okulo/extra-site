@@ -13,14 +13,14 @@
 </head>
 <body>
 <nav class="navbar-expand-lg navbar navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Site</a>
+    <a class="navbar-brand" href="#">Board</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-link " href="/">Заполнение формы</a>
-            <a class="nav-link" href="/home/formData">Просмотр данных</a>
+            <a class="nav-link " href="/">Список объявлений</a>
+            <a class="nav-link" href="/home/addBoard">Создать объявление</a>
         </div>
     </div>
 </nav>

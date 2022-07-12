@@ -2,19 +2,16 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">Данные форм</div>
+                    <div class="card-header">Создать объявление</div>
                     <div class="card-body">
-                        <div v-for="data in forms" class="list-group" id="list-tab" role="tablist">
-                            <span class="list-group-item list-group-item-action"  @click="getFormDetail(data.form_id)" >
-                                 {{data.form_name}}
-                            </span>
-                        </div>
-                        <div v-if="fullData.length > 0" style="margin-top: 15px; border: #e9ecef 1px solid; padding: 10px;" >
-                            <h5>Полные данные</h5>
-                                <div  v-for="field in fullData" class="form-control">
-                                    {{field.name}} - {{field.value}}
-                                </div>
-                        </div>
+                        <form @submit="onSubmit" class="add-form">
+                            <div class="form-control">
+                                <input class="col-md-4" type="text" v-model="name" name="name" placeholder="Название" /><br><br>
+                                <input class="col-md-4" type="text" v-model="photo"  name="photo" placeholder="Ссылка на фото" /><br><br>
+                                <input class="col-md-4" type="number" v-model="price" name="price" placeholder="Цена" /><br> <br>
+                                <input type="submit" value="Добавить" class="btn btn-sm btn-outline-success" />
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -25,63 +22,41 @@
     export default {
         data (){
             return {
-                forms: [],
-                formName: [],
-                formUid: '',
-                formFields: [],
-                fullData: [],
+                photo: '',
+                name: '',
+                price: '',
             }
         },
         methods : {
-            getFormsData(){
-                axios.get('https://alakol-parus.kz/extra-api/public/home/getFormData',{
-                   // _token: 'SbsI80JW1CL3RNqODHzhA77pgfbUgK6tlPVGxkKA'
+            onSubmit(e){
+                if(!this.name || !this.photo || !this.price){
+                    alert('Введите все данные')
+                    return
+                }
+
+                console.log('save');
+                this.formUid = Math.floor(Math.random() * Date.now());
+
+                axios.post('/home/saveForm', {
+                    name: this.name,
+                    price: this.price,
+                    photo: this.photo
                 })
                     .then(response => {
-                        response.data.forEach(elem =>{
-                            this.forms.push({
-                                form_name: elem.form_name,
-                                form_data: JSON.parse(elem.form_data),
-                                created_at: elem.created_at,
-                                form_id: elem.form_id
-                            });
-                        });
 
-
+                        console.log(response);
+                        if(response.data.created_at){
+                            alert('Даныне успшено добавлены!');
+                            location.reload();
+                        }
                     })
                     .catch(err => {
                         console.log(err);
                     });
+
+                e.preventDefault()
             },
-            getFormDetail(id){
-                this.fullData = [];
-                this.forms.forEach(elem=>{
-                    if(elem.form_id == id){
 
-                        var formFieldArray = elem.form_data.split("&");
-                        $.each(formFieldArray, function(i, pair){
-                            var nameValue = pair.split("=");
-                            var name = decodeURIComponent(nameValue[0]);
-                            var value = decodeURIComponent(nameValue[1]);
-                        });
-
-                        formFieldArray.forEach(elem =>{
-                            var nameValue = elem.split("=");
-                            var name = decodeURIComponent(nameValue[0]);
-                            var value = decodeURIComponent(nameValue[1]);
-                            this.fullData.push({
-                               name: name,
-                               value: value,
-                            });
-                        });
-
-                    }
-
-                });
-            }
-        },
-        mounted() {
-            this.getFormsData();
         }
     }
 </script>
