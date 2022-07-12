@@ -17,5 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('home/saveForm', [App\Http\Controllers\HomeController::class, 'saveForm'])->name('saveForm');
-
-Route::get('home/formData', [App\Http\Controllers\HomeController::class, 'formData'])->name('formData');
+Route::get('home/addBoard', [App\Http\Controllers\HomeController::class, 'addBoard'])->name('addBoard');
+Route::get('home/getBoards', [App\Http\Controllers\HomeController::class, 'getBoards'])->name('getBoards');
+Route::get('home/getBoard', [App\Http\Controllers\HomeController::class, 'getBoard'])->name('getBoard');
+Route::get('home/show', [App\Http\Controllers\HomeController::class, 'show'])->name('show');
